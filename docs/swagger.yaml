@@ -1,0 +1,1017 @@
+definitions:
+  models.Batch:
+    properties:
+      Date:
+        type: string
+      adress_code:
+        type: string
+      article:
+        type: string
+      contact:
+        type: string
+      counterparty_name:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+      phone:
+        type: string
+      price:
+        type: number
+      product_name:
+        type: string
+      quantity:
+        type: integer
+      role:
+        type: string
+      row:
+        type: integer
+      type:
+        type: string
+      username:
+        type: string
+      zone:
+        type: string
+    type: object
+  models.Cell:
+    properties:
+      adress_code:
+        type: string
+      id:
+        type: integer
+      row:
+        type: integer
+      zone:
+        type: string
+    type: object
+  models.Counterparty:
+    properties:
+      contact:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
+  models.PostBatch:
+    properties:
+      adress_code:
+        type: string
+      article:
+        type: string
+      counterparty_name:
+        type: string
+      quantity:
+        type: integer
+      type:
+        type: string
+    type: object
+  models.PostCell:
+    properties:
+      adress_code:
+        type: string
+      row:
+        type: integer
+      zone:
+        type: string
+    type: object
+  models.PostCounterparty:
+    properties:
+      contact:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
+  models.PostProduct:
+    properties:
+      article:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  models.Product:
+    properties:
+      article:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  models.Storage:
+    properties:
+      adress_code:
+        type: string
+      article:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: integer
+      row:
+        type: integer
+      zone:
+        type: string
+    type: object
+  models.User:
+    properties:
+      active:
+        type: boolean
+      full_name:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+  models.UserSignIn:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: API Server for warehouse Application
+  title: warehouse API
+  version: "1.0"
+paths:
+  /:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Проверка работоспособности сервера
+      tags:
+      - health
+  /batches:
+    get:
+      description: Возвращает список всех партий в бд
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Batch'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Получить все партии
+      tags:
+      - batches
+    post:
+      consumes:
+      - application/json
+      description: Создается партия поставки
+      parameters:
+      - description: Данные партии
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.PostBatch'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Создать партию
+      tags:
+      - batches
+  /batches/{id}:
+    get:
+      description: Возвращает данные партии по его ID
+      parameters:
+      - description: ID партии
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Batch'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Получить партию по ID
+      tags:
+      - batches
+  /cells:
+    get:
+      description: Возвращает список всех ячеек хранения в бд
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Cell'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Получить все ячейка
+      tags:
+      - cells
+    post:
+      consumes:
+      - application/json
+      description: Создается ячейка хранения в базе
+      parameters:
+      - description: Данные ячейки
+        in: body
+        name: cell
+        required: true
+        schema:
+          $ref: '#/definitions/models.PostCell'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Создать ячейку
+      tags:
+      - cells
+  /cells/{id}:
+    get:
+      description: Возвращает ячейку по его ID
+      parameters:
+      - description: ID ячейки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Cell'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Получить ячейку по ID
+      tags:
+      - cells
+    patch:
+      consumes:
+      - application/json
+      description: Изменение данных ячейки хранения
+      parameters:
+      - description: ID ячейки
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: ячейка
+        in: body
+        name: cell
+        required: true
+        schema:
+          $ref: '#/definitions/models.PostCell'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Изменить ячейки
+      tags:
+      - cells
+  /counterparties:
+    get:
+      description: Возвращает список всех контрагентов в бд
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Counterparty'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Получить всех контрагентов
+      tags:
+      - counterparties
+    post:
+      consumes:
+      - application/json
+      description: Создает контрагента в базе
+      parameters:
+      - description: контрагент
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.PostCounterparty'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Создать контрагента
+      tags:
+      - counterparties
+  /counterparties/{id}:
+    get:
+      description: Возвращает контрагента по его ID
+      parameters:
+      - description: ID контрагента
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Counterparty'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Получить контрагента по ID
+      tags:
+      - counterparties
+    patch:
+      consumes:
+      - application/json
+      description: Изменение данных контрагента
+      parameters:
+      - description: ID контрагента
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: контрагент
+        in: body
+        name: operation
+        required: true
+        schema:
+          $ref: '#/definitions/models.PostCounterparty'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Изменить контрагента
+      tags:
+      - counterparties
+  /products:
+    get:
+      description: Возвращает список всех товаров в бд
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Product'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Получить все товары
+      tags:
+      - products
+    post:
+      consumes:
+      - application/json
+      description: Создается товар в базе
+      parameters:
+      - description: товар
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.PostProduct'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Создать товар
+      tags:
+      - products
+  /products/{id}:
+    get:
+      description: Возвращает товар по его ID
+      parameters:
+      - description: ID товара
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Получить товар по ID
+      tags:
+      - products
+    patch:
+      consumes:
+      - application/json
+      description: Изменение данных товара
+      parameters:
+      - description: ID ячейки
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: товар
+        in: body
+        name: operation
+        required: true
+        schema:
+          $ref: '#/definitions/models.PostProduct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Изменить товар
+      tags:
+      - products
+  /sign-in:
+    post:
+      consumes:
+      - application/json
+      description: Вход по логину и паролю
+      parameters:
+      - description: Учётные данные
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserSignIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Авторизация пользователя
+      tags:
+      - auth
+  /storages:
+    get:
+      description: Возвращает список всех мест с товарами
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Storage'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Получить все места хранения
+      tags:
+      - storages
+  /storages/{adressCode}:
+    get:
+      description: Возвращает место хранения по его adressCode
+      parameters:
+      - description: AdressCode места хранения
+        in: path
+        name: adressCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Storage'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Получить место хранения
+      tags:
+      - storages
+  /users:
+    get:
+      description: Возвращает список всех пользователей в бд
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Получить всех пользователей
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Создается пользователя в базе
+      parameters:
+      - description: пользователь
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Создать пользователя
+      tags:
+      - users
+  /users/{id}:
+    get:
+      description: Возвращает пользователя по его ID
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Получить пользователя по ID
+      tags:
+      - users
+    patch:
+      consumes:
+      - application/json
+      description: Изменение данные пользователя
+      parameters:
+      - description: ID рользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: пользователь
+        in: body
+        name: operation
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Изменить данные пользователя
+      tags:
+      - users
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
